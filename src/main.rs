@@ -1,29 +1,15 @@
 use std::collections::HashMap;
 
 fn main() {
-    let s = String::from("B");
+    let s = String::from("251985");
 
-    let char_weight = get_char_weight();
-    for (key, _value) in s.chars().enumerate() {
-        println!("c: {}", char_weight.get(&key).unwrap());
-    }
 
-    let a = get_char_map();
-    for (c , v) in a {
-        println!("k: {} , v : {}" , c, v);
-    }
 
     let s2 = clear_string(s);
     println!("{}", &s2.as_str()[0..1]);
 
-    println!("total char sum : {}", get_char_sum(s2));
-
-    let char_num = get_char_map();
-
-    let c = 'C';
-
-    let m = char_num.get(&c).unwrap();
-    println!("c: {}", m);
+    let p1 = clear_string(String::from("Z"));
+    cal_part2_remainder(s2, get_char_sum(p1));
 }
 
 
@@ -60,8 +46,8 @@ fn get_char_sum(part1: String) -> i32 {
     match char_list.len() {
         1 => 324 + *char_map.get(&char_list[0]).unwrap() * weight[&1],
         2 => {
-            let mut total:i32 = 0;
-            for (key ,value) in char_list.iter().enumerate() {
+            let mut total: i32 = 0;
+            for (key, value) in char_list.iter().enumerate() {
                 total += weight[&key] * *char_map.get(&value).unwrap();
             }
             total
@@ -70,21 +56,40 @@ fn get_char_sum(part1: String) -> i32 {
     }
 }
 
+fn cal_part2_remainder(s: String, char_sum: i32) -> i32 {
+    let mut sum = 0;
+
+    for (i, v) in s.chars().enumerate() {
+        let index = i as i32;
+        println!("{}:{}", i, v.to_digit(10).unwrap());
+        let value = v.to_digit(10).unwrap() as i32;
+        sum += (7 - index) * value;
+    }
+
+    let x = 11;
+    println!("sum is {}", sum);
+
+    let y = x - ((char_sum + sum) % x);
+    //todo : seem wrong
+    println!("haha:: {}",y);
+    y
+}
+
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
 
     #[test]
-    fn test_get_weight(){
+    fn test_get_weight() {
         let weight = get_char_weight();
-        let first : usize = 0;
-        let second : usize = 1;
+        let first: usize = 0;
+        let second: usize = 1;
         assert_eq!(weight[&first], 9);
         assert_eq!(weight[&second], 8);
     }
 
     #[test]
-    fn test_get_char_sum(){
+    fn test_get_char_sum() {
         let a = String::from("B");
         assert_eq!(get_char_sum(a), 412);
 
