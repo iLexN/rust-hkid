@@ -3,8 +3,6 @@ use std::collections::HashMap;
 fn main() {
     let s = String::from("251985");
 
-
-
     let s2 = clear_string(s);
     println!("{}", &s2.as_str()[0..1]);
 
@@ -12,10 +10,8 @@ fn main() {
     cal_part2_remainder(s2, get_char_sum(p1));
 }
 
-
 fn clear_string(s: String) -> String {
-    let clear_str = s.trim().to_uppercase();
-    clear_str
+    s.trim().to_uppercase();
 }
 
 fn get_char_map() -> HashMap<char, i32> {
@@ -52,7 +48,7 @@ fn get_char_sum(part1: String) -> i32 {
             }
             total
         }
-        _ => 0 // how to return error?
+        _ => 0, // how to return error?
     }
 }
 
@@ -71,7 +67,7 @@ fn cal_part2_remainder(s: String, char_sum: i32) -> i32 {
 
     let y = x - ((char_sum + sum) % x);
     //todo : seem wrong
-    println!("haha:: {}",y);
+    println!("haha:: {}", y);
     y
 }
 
