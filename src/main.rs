@@ -11,7 +11,7 @@ fn main() {
 }
 
 fn clear_string(s: String) -> String {
-    s.trim().to_uppercase();
+    s.trim().to_uppercase()
 }
 
 fn get_char_map() -> HashMap<char, i32> {
