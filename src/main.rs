@@ -16,11 +16,10 @@ fn clear_string(s: String) -> String {
 
 fn get_char_map() -> HashMap<char, i32> {
     let mut char_num = HashMap::new();
-    let mut num = 0;
-    for c in b'A'..=b'Z' {
+    for (num, c) in (b'A'..=b'Z').enumerate() {
         let key = c as char;
-        char_num.insert(key, 10 + num);
-        num += 1;
+        let num2 = num as i32;
+        char_num.insert(key, 10 + num2);
     }
     char_num
 }
