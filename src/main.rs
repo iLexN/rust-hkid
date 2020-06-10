@@ -20,7 +20,7 @@ fn get_char_map() -> HashMap<char, i32> {
     for c in b'A'..=b'Z' {
         let key = c as char;
         char_num.insert(key, 10 + num);
-        num = num + 1;
+        num += 1;
     }
     char_num
 }
