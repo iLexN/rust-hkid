@@ -1,30 +1,31 @@
+use std::char;
 use std::collections::HashMap;
 
 fn main() {
-    let s = String::from("251985");
+    let s = String::from("000004");
 
     let s2 = clear_string(s);
     println!("{}", &s2.as_str()[0..1]);
 
-    let p1 = clear_string(String::from("Z"));
-    cal_part2_remainder(s2, get_char_sum(p1));
+    let p1 = clear_string(String::from("r"));
+
+    let check = get_part2_remainder(p1, s2).unwrap();
+    println!("{}", check);
 }
 
 fn clear_string(s: String) -> String {
     s.trim().to_uppercase()
 }
 
-fn get_char_map() -> HashMap<char, i32> {
+fn get_char_map() -> HashMap<char, u32> {
     let mut char_num = HashMap::new();
     for (num, c) in (b'A'..=b'Z').enumerate() {
-        let key = c as char;
-        let num2 = num as i32;
-        char_num.insert(key, 10 + num2);
+        char_num.insert(c as char, 10 + num as u32);
     }
     char_num
 }
 
-pub fn get_char_weight() -> HashMap<usize, i32> {
+fn get_char_weight() -> HashMap<usize, u32> {
     let mut char_weight = HashMap::new();
 
     char_weight.insert(0, 9);
@@ -33,41 +34,45 @@ pub fn get_char_weight() -> HashMap<usize, i32> {
     char_weight
 }
 
-fn get_char_sum(part1: String) -> i32 {
+fn get_char_sum(part1: String) -> Option<u32> {
     let char_map = get_char_map();
     let char_list: Vec<char> = part1.chars().collect();
     let weight = get_char_weight();
 
     match char_list.len() {
-        1 => 324 + *char_map.get(&char_list[0]).unwrap() * weight[&1],
+        1 => Some(324 + *char_map.get(&char_list[0]).unwrap() * weight[&1]),
         2 => {
-            let mut total: i32 = 0;
+            let mut total: u32 = 0;
             for (key, value) in char_list.iter().enumerate() {
                 total += weight[&key] * *char_map.get(&value).unwrap();
             }
-            total
+            Some(total)
         }
-        _ => 0, // how to return error?
+        _ => None,
     }
 }
 
-fn cal_part2_remainder(s: String, char_sum: i32) -> i32 {
-    let mut sum = 0;
+fn cal_part2_remainder(s: String, char_sum: u32) -> u32 {
+    let mut sum: u32 = 0;
 
     for (i, v) in s.chars().enumerate() {
-        let index = i as i32;
-        println!("{}:{}", i, v.to_digit(10).unwrap());
-        let value = v.to_digit(10).unwrap() as i32;
-        sum += (7 - index) * value;
+        sum += (7 - i as u32) * v.to_digit(10).unwrap() as u32;
     }
 
-    let x = 11;
-    println!("sum is {}", sum);
+    let x: u32 = 11;
+    x - ((char_sum + sum) % x)
+}
 
-    let y = x - ((char_sum + sum) % x);
-    //todo : seem wrong
-    println!("haha:: {}", y);
-    y
+fn get_part2_remainder(part1: String, part2: String) -> Option<char> {
+    let remainder: u32 = cal_part2_remainder(part2, get_char_sum(part1).unwrap());
+    match remainder {
+        10 => Some('A'),
+        11 => Some('0'),
+        _ => match char::from_digit(remainder, 10) {
+            Some(a) => Some(a),
+            None => None,
+        },
+    }
 }
 
 #[cfg(test)]
@@ -86,12 +91,12 @@ mod tests {
     #[test]
     fn test_get_char_sum() {
         let a = String::from("B");
-        assert_eq!(get_char_sum(a), 412);
+        assert_eq!(get_char_sum(a), Some(412));
 
         let a = String::from("Z");
-        assert_eq!(get_char_sum(a), 604);
+        assert_eq!(get_char_sum(a), Some(604));
 
         let a = String::from("CA");
-        assert_eq!(get_char_sum(a), 188);
+        assert_eq!(get_char_sum(a), Some(188));
     }
 }
