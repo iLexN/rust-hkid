@@ -46,11 +46,11 @@ fn validate(s: &str) -> Option<Hkid> {
     let c = re.captures(clear_str.as_str());
     match c {
         Some(cc) => {
-            return Some(Hkid {
+            Some(Hkid {
                 part1: cc.name("p1").unwrap().as_str().to_owned(),
-                part2: clear_string(cc.name("p2").unwrap().as_str().to_owned()  ),
+                part2: clear_string(cc.name("p2").unwrap().as_str().to_owned()),
                 part3: cc.name("p3").unwrap().as_str().to_owned(),
-            });
+            })
         }
         None => None,
     }
@@ -144,22 +144,22 @@ mod tests {
     }
 
     #[test]
-    fn test_check_str(){
-        assert_eq!(check_str("B111111(1)"),true);
-        assert_eq!(check_str("CA182361(1)"),true);
-        assert_eq!(check_str("ZA182361(3)"),true);
-        assert_eq!(check_str("B111112(A)"),true);
-        assert_eq!(check_str("B111117(0)"),true);
-        assert_eq!(check_str(" B111117(0)"),true);
-        assert_eq!(check_str("z109852(8)"),true);
+    fn test_check_str() {
+        assert_eq!(check_str("B111111(1)"), true);
+        assert_eq!(check_str("CA182361(1)"), true);
+        assert_eq!(check_str("ZA182361(3)"), true);
+        assert_eq!(check_str("B111112(A)"), true);
+        assert_eq!(check_str("B111117(0)"), true);
+        assert_eq!(check_str(" B111117(0)"), true);
+        assert_eq!(check_str("z109852(8)"), true);
 
-        assert_eq!(check_str("B111111(3)"),false);
-        assert_eq!(check_str("CAC182361(1)"),false);
-        assert_eq!(check_str("1B111117(0)"),false);
-        assert_eq!(check_str("1111117(0)"),false);
-        assert_eq!(check_str("B22(0)"),false);
-        assert_eq!(check_str("B111111(G)"),false);
-        assert_eq!(check_str("1111a(11)"),false);
-        assert_eq!(check_str("1111a11(11)"),false);
+        assert_eq!(check_str("B111111(3)"), false);
+        assert_eq!(check_str("CAC182361(1)"), false);
+        assert_eq!(check_str("1B111117(0)"), false);
+        assert_eq!(check_str("1111117(0)"), false);
+        assert_eq!(check_str("B22(0)"), false);
+        assert_eq!(check_str("B111111(G)"), false);
+        assert_eq!(check_str("1111a(11)"), false);
+        assert_eq!(check_str("1111a11(11)"), false);
     }
 }
