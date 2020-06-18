@@ -1,16 +1,33 @@
 use std::char;
 use std::collections::HashMap;
+use regex::Regex;
 
 fn main() {
-    let s = String::from("000004");
+    let p2 = String::from("000004");
 
-    let s2 = clear_string(s);
+    let s2 = clear_string(p2);
     println!("{}", &s2.as_str()[0..1]);
 
     let p1 = clear_string(String::from("r"));
 
-    let check = get_part2_remainder(p1, s2).unwrap();
+    let check = get_part2_remainder(&p1, &s2).unwrap();
     println!("{}", check);
+
+    let p3 = String::from("22");
+
+    let re = Regex::new(r"^(?P<p1>\D{1,2})(?P<p2>\d{6})\((?P<p3>[\w{1}0-9aA])\)$").unwrap();
+    let mut ss = String::from(p1);
+    ss.push_str(s2.as_str());
+    ss.push_str("(");
+    ss.push_str(p3.as_str());
+    ss.push_str(")");
+
+    //todo: check `None`
+    let c = re.captures(ss.as_str()).unwrap();
+    println!("{:?}", c.name("p3").unwrap().as_str());
+
+    let result = re.is_match(ss.as_str());
+    println!("result: {}", result);
 }
 
 fn clear_string(s: String) -> String {
@@ -34,7 +51,7 @@ fn get_char_weight() -> HashMap<usize, u32> {
     char_weight
 }
 
-fn get_char_sum(part1: String) -> Option<u32> {
+fn get_char_sum(part1: &String) -> Option<u32> {
     let char_map = get_char_map();
     let char_list: Vec<char> = part1.chars().collect();
     let weight = get_char_weight();
@@ -52,7 +69,7 @@ fn get_char_sum(part1: String) -> Option<u32> {
     }
 }
 
-fn cal_part2_remainder(s: String, char_sum: u32) -> u32 {
+fn cal_part2_remainder(s: &String, char_sum: u32) -> u32 {
     let mut sum: u32 = 0;
 
     for (i, v) in s.chars().enumerate() {
@@ -63,7 +80,7 @@ fn cal_part2_remainder(s: String, char_sum: u32) -> u32 {
     x - ((char_sum + sum) % x)
 }
 
-fn get_part2_remainder(part1: String, part2: String) -> Option<char> {
+fn get_part2_remainder(part1: &String, part2: &String) -> Option<char> {
     let remainder: u32 = cal_part2_remainder(part2, get_char_sum(part1).unwrap());
     match remainder {
         10 => Some('A'),
@@ -91,12 +108,12 @@ mod tests {
     #[test]
     fn test_get_char_sum() {
         let a = String::from("B");
-        assert_eq!(get_char_sum(a), Some(412));
+        assert_eq!(get_char_sum(&a), Some(412));
 
         let a = String::from("Z");
-        assert_eq!(get_char_sum(a), Some(604));
+        assert_eq!(get_char_sum(&a), Some(604));
 
         let a = String::from("CA");
-        assert_eq!(get_char_sum(a), Some(188));
+        assert_eq!(get_char_sum(&a), Some(188));
     }
 }
