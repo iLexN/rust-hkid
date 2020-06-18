@@ -6,28 +6,54 @@ fn main() {
     let p2 = String::from("000004");
 
     let s2 = clear_string(p2);
-    println!("{}", &s2.as_str()[0..1]);
 
     let p1 = clear_string(String::from("r"));
 
     let check = get_part2_remainder(&p1, &s2).unwrap();
     println!("{}", check);
 
-    let p3 = String::from("22");
+    let p3 = String::from("2");
 
-    let re = Regex::new(r"^(?P<p1>\D{1,2})(?P<p2>\d{6})\((?P<p3>[\w{1}0-9aA])\)$").unwrap();
     let mut ss = String::from(p1);
     ss.push_str(s2.as_str());
     ss.push_str("(");
     ss.push_str(p3.as_str());
     ss.push_str(")");
 
-    //todo: check `None`
-    let c = re.captures(ss.as_str()).unwrap();
-    println!("{:?}", c.name("p3").unwrap().as_str());
-
-    let result = re.is_match(ss.as_str());
+    let result = check_str(ss.as_str());
     println!("result: {}", result);
+}
+
+fn check_str(s: &str) -> bool {
+    match validate(s) {
+        Some(hkid) => {
+            let check = get_part2_remainder(&hkid.part1, &hkid.part2).unwrap();
+            check.to_string() == hkid.part3
+        }
+        None => false,
+    }
+}
+
+struct Hkid {
+    part1: String,
+    part2: String,
+    part3: String,
+}
+
+fn validate(s: &str) -> Option<Hkid> {
+    let clear_str = clear_string(s.to_owned());
+    let re = Regex::new(r"^(?P<p1>\D{1,2})(?P<p2>\d{6})\((?P<p3>[\w{1}0-9aA])\)$").unwrap();
+    let c = re.captures(clear_str.as_str());
+    match c {
+        Some(cc) => {
+            return Some(Hkid {
+                part1: cc.name("p1").unwrap().as_str().to_owned(),
+                part2: clear_string(cc.name("p2").unwrap().as_str().to_owned()  ),
+                part3: cc.name("p3").unwrap().as_str().to_owned(),
+            });
+        }
+        None => None,
+    }
 }
 
 fn clear_string(s: String) -> String {
@@ -115,5 +141,25 @@ mod tests {
 
         let a = String::from("CA");
         assert_eq!(get_char_sum(&a), Some(188));
+    }
+
+    #[test]
+    fn test_check_str(){
+        assert_eq!(check_str("B111111(1)"),true);
+        assert_eq!(check_str("CA182361(1)"),true);
+        assert_eq!(check_str("ZA182361(3)"),true);
+        assert_eq!(check_str("B111112(A)"),true);
+        assert_eq!(check_str("B111117(0)"),true);
+        assert_eq!(check_str(" B111117(0)"),true);
+        assert_eq!(check_str("z109852(8)"),true);
+
+        assert_eq!(check_str("B111111(3)"),false);
+        assert_eq!(check_str("CAC182361(1)"),false);
+        assert_eq!(check_str("1B111117(0)"),false);
+        assert_eq!(check_str("1111117(0)"),false);
+        assert_eq!(check_str("B22(0)"),false);
+        assert_eq!(check_str("B111111(G)"),false);
+        assert_eq!(check_str("1111a(11)"),false);
+        assert_eq!(check_str("1111a11(11)"),false);
     }
 }
