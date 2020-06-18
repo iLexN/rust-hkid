@@ -93,7 +93,7 @@ fn get_char_sum(part1: &str) -> Option<u32> {
     }
 }
 
-fn cal_part2_remainder(s: &String, char_sum: u32) -> u32 {
+fn cal_part2_remainder(s: &str, char_sum: u32) -> u32 {
     let mut sum: u32 = 0;
 
     for (i, v) in s.chars().enumerate() {
@@ -104,7 +104,7 @@ fn cal_part2_remainder(s: &String, char_sum: u32) -> u32 {
     x - ((char_sum + sum) % x)
 }
 
-fn get_part2_remainder(part1: &String, part2: &String) -> Option<char> {
+fn get_part2_remainder(part1: &str, part2: &str) -> Option<char> {
     let remainder: u32 = cal_part2_remainder(part2, get_char_sum(part1).unwrap());
     match remainder {
         10 => Some('A'),
