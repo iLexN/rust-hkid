@@ -1,6 +1,6 @@
+use regex::Regex;
 use std::char;
 use std::collections::HashMap;
-use regex::Regex;
 
 fn main() {
     let p2 = String::from("000004");
@@ -14,7 +14,7 @@ fn main() {
 
     let p3 = String::from("2");
 
-    let mut ss = String::from(p1);
+    let mut ss = p1;
     ss.push_str(s2.as_str());
     ss.push_str("(");
     ss.push_str(p3.as_str());
@@ -45,13 +45,11 @@ fn validate(s: &str) -> Option<Hkid> {
     let re = Regex::new(r"^(?P<p1>\D{1,2})(?P<p2>\d{6})\((?P<p3>[\w{1}0-9aA])\)$").unwrap();
     let c = re.captures(clear_str.as_str());
     match c {
-        Some(cc) => {
-            Some(Hkid {
-                part1: cc.name("p1").unwrap().as_str().to_owned(),
-                part2: clear_string(cc.name("p2").unwrap().as_str().to_owned()),
-                part3: cc.name("p3").unwrap().as_str().to_owned(),
-            })
-        }
+        Some(cc) => Some(Hkid {
+            part1: cc.name("p1").unwrap().as_str().to_owned(),
+            part2: clear_string(cc.name("p2").unwrap().as_str().to_owned()),
+            part3: cc.name("p3").unwrap().as_str().to_owned(),
+        }),
         None => None,
     }
 }
@@ -77,7 +75,7 @@ fn get_char_weight() -> HashMap<usize, u32> {
     char_weight
 }
 
-fn get_char_sum(part1: &String) -> Option<u32> {
+fn get_char_sum(part1: &str) -> Option<u32> {
     let char_map = get_char_map();
     let char_list: Vec<char> = part1.chars().collect();
     let weight = get_char_weight();
